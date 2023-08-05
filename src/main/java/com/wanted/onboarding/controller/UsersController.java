@@ -19,7 +19,7 @@ public class UsersController {
 
     @PostMapping("/users/register")
     public String register(Users users) {
-        service.userRegister(users);
+        service.registerUser(users);
 
         return "redirect:/";
     }

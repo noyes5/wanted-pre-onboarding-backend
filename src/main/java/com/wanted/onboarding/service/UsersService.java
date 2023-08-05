@@ -4,5 +4,5 @@ import com.wanted.onboarding.entity.Users;
 import org.springframework.stereotype.Service;
 
 public interface UsersService {
-    public void userRegister(Users users);
+    public void registerUser(Users users);
 }
