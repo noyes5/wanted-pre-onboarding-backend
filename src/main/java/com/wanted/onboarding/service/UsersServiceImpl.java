@@ -17,6 +17,9 @@ public class UsersServiceImpl implements UsersService {
     @Autowired
     private UsersRepository usersRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public void registerUser(Users users) throws RuntimeException {
         String email = users.getEmail();
@@ -33,6 +36,7 @@ public class UsersServiceImpl implements UsersService {
         if (rawPassword.length() < 8) {
             throw new InvalidPasswordException("비밀번호는 8자리 이상 입력해주세요.");
         }
+        users.setPassword(passwordEncoder.encode(rawPassword));
 
         usersRepository.save(users);
     }
