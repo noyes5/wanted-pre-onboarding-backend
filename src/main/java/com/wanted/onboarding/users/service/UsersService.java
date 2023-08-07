@@ -1,9 +1,9 @@
 package com.wanted.onboarding.users.service;
 
 import com.wanted.onboarding.users.entity.Users;
+import org.springframework.http.ResponseEntity;
 
 public interface UsersService {
-    void registerUser(Users users);
+    boolean registerUser(String email, String password);
     boolean authenticateUser(String email, String password);
-    int getUserIdByEmail(String email);
 }

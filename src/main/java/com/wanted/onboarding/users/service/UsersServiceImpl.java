@@ -8,6 +8,7 @@ import com.wanted.onboarding.exception.InvalidPasswordException;
 import com.wanted.onboarding.users.repository.UsersRepository;
 import com.wanted.onboarding.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,24 +26,25 @@ public class UsersServiceImpl implements UsersService {
 
 
     @Override
-    public void registerUser(Users users) throws RuntimeException {
-        String email = users.getEmail();
+    public boolean registerUser(String email, String password) throws RuntimeException {
         if (!isValidEmail(email)) {
             throw new InvalidEmailException("유효하지 않은 이메일 형식입니다.");
         }
 
-        Optional<Users> existingUser = usersRepository.findByEmail(users.getEmail());
+        Optional<Users> existingUser = usersRepository.findByEmail(email);
         if (existingUser.isPresent()) {
             throw new DuplicateEmailException("중복된 이메일이 이미 존재합니다.");
         }
-
-        String rawPassword = users.getPassword();
-        if (rawPassword.length() < 8) {
+        if (password.length() < 8) {
             throw new InvalidPasswordException("비밀번호는 8자리 이상 입력해주세요.");
         }
-        users.setPassword(passwordEncoder.encode(rawPassword));
+        Users user = new Users();
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(password));
 
-        usersRepository.save(users);
+        usersRepository.save(user);
+
+        return true;
     }
     private boolean isValidEmail(String email) {
         String[] splitEmail = email.split("@");
@@ -70,14 +72,7 @@ public class UsersServiceImpl implements UsersService {
         return optionalUser.isPresent() && isPasswordValid;
     }
 
-    @Override
-    public int getUserIdByEmail(String email) {
-        Optional<Users> optionalUser = usersRepository.findByEmail(email);
-        if (!optionalUser.isPresent()) {
-            return optionalUser.get().getUserId();
-        }
-        throw new IllegalArgumentException("ㅁㄴㅇㅁㄴ " + email);
-    }
+
     private boolean verifyPassword(String rawPassword, String storedPassword) {
         return passwordEncoder.matches(rawPassword, storedPassword);
     }

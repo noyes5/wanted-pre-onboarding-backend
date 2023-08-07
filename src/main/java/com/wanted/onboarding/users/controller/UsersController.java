@@ -2,46 +2,39 @@ package com.wanted.onboarding.users.controller;
 
 import com.wanted.onboarding.security.JwtTokenProvider;
 import com.wanted.onboarding.users.entity.Users;
-import com.wanted.onboarding.users.dto.LoginRequest;
+import com.wanted.onboarding.users.dto.LoginDTO;
 import com.wanted.onboarding.users.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 public class UsersController {
     @Autowired
     UsersService usersService;
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-    @GetMapping("/users/register")
-    public String registerForm() {
-        return "register";
-    }
-
     @PostMapping("/users/register")
-    public String register(Users users) {
-        usersService.registerUser(users);
+    public ResponseEntity<String> register(@RequestBody LoginDTO loginDTO) {
+        // 사용자 등록을 위한 로직 수행
+        boolean isRegistered = usersService.registerUser(loginDTO.getEmail(), loginDTO.getPassword());
 
-        return "login";
-    }
-
-    @GetMapping("/login")
-    public String loginForm() {
-        return "login";
+        if (isRegistered) {
+            return new ResponseEntity<>("회원 가입 성공", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("이미 등록된 이메일입니다.", HttpStatus.CONFLICT);
+        }
     }
 
     @PostMapping("/login")
-    @ResponseBody
-    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
-        boolean isAuthenticated = usersService.authenticateUser(loginRequest.getEmail(), loginRequest.getPassword());
-        System.out.println(loginRequest.getPassword());
+    public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO) {
+        boolean isAuthenticated = usersService.authenticateUser(loginDTO.getEmail(), loginDTO.getPassword());
+        System.out.println(loginDTO.getPassword());
         if (isAuthenticated) {
-            String token = jwtTokenProvider.createToken(loginRequest.getEmail());
+            String token = jwtTokenProvider.createToken(loginDTO.getEmail());
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);
 
