@@ -58,6 +58,13 @@ public class UsersServiceImpl implements UsersService {
     }
     @Override
     public String login(String email, String password) {
+        if (!isValidEmail(email)) {
+            throw new InvalidEmailException("유효하지 않은 이메일 형식입니다.");
+        }
+        if (password.length() < 8) {
+            throw new InvalidPasswordException("비밀번호는 8자리 이상 입력해주세요.");
+        }
+
         Optional<Users> optionalUser = getUserByEmail(email);
         boolean isAuthenticated = authenticateUser(email, password);
 
