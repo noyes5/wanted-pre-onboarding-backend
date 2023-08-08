@@ -1,6 +1,7 @@
 package com.wanted.onboarding.board.service;
 
 import com.wanted.onboarding.board.dto.BoardDTO;
+import com.wanted.onboarding.board.dto.BoardDetailDTO;
 import com.wanted.onboarding.board.dto.BoardListDTO;
 import com.wanted.onboarding.board.entity.Board;
 import com.wanted.onboarding.board.repository.BoardRepository;
@@ -40,8 +41,21 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public Board boardView(Integer id) {
-        return null;
+    public BoardDetailDTO viewBoard(Integer boardId) {
+        Board board = boardRepository.findById(boardId).orElse(null);
+        if (board != null) {
+            return BoardDetailDTO.builder()
+                    .boardId(board.getBoardId())
+                    .title(board.getTitle())
+                    .content(board.getContent())
+                    .userEmail(board.getUser().getEmail())
+                    .createdAt(board.getCreatedAt())
+                    .updatedAt(board.getUpdatedAt())
+                    .build();
+        } else {
+            return null;
+        }
+
     }
 
     @Override

@@ -1,7 +1,8 @@
 package com.wanted.onboarding.board.controller;
 
-import com.wanted.onboarding.board.PaginationUtils;
+import com.wanted.onboarding.board.util.PaginationUtil;
 import com.wanted.onboarding.board.dto.BoardDTO;
+import com.wanted.onboarding.board.dto.BoardDetailDTO;
 import com.wanted.onboarding.board.dto.BoardListDTO;
 import com.wanted.onboarding.board.entity.Board;
 import com.wanted.onboarding.board.service.BoardService;
@@ -47,10 +48,10 @@ public class BoardController {
                                                                @RequestParam(defaultValue = "10") int size) {
         Page<BoardListDTO> boardPage = boardService.getBoardList(page, size);
         int totalPage = boardPage.getTotalPages();
-        page = PaginationUtils.adjustPageNumber(page, totalPage);
+        page = PaginationUtil.adjustPageNumber(page, totalPage);
 
-        int startPage = PaginationUtils.calculateStartPage(page);
-        int endPage = PaginationUtils.calculateEndPage(startPage, totalPage);
+        int startPage = PaginationUtil.calculateStartPage(page);
+        int endPage = PaginationUtil.calculateEndPage(startPage, totalPage);
 
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("page", String.valueOf(page));
@@ -59,5 +60,15 @@ public class BoardController {
         responseHeaders.add("start-page", String.valueOf(startPage));
         responseHeaders.add("end-page", String.valueOf(endPage));
         return new ResponseEntity<>(boardPage.getContent(), responseHeaders, HttpStatus.OK);
+    }
+
+    @GetMapping("/{boardId}")
+    public ResponseEntity<BoardDetailDTO> viewBoard(@PathVariable Integer boardId) {
+        BoardDetailDTO boardDetailDTO = boardService.viewBoard(boardId);
+        if (boardDetailDTO == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(boardDetailDTO, HttpStatus.OK);
     }
 }

@@ -1,6 +1,6 @@
-package com.wanted.onboarding.board;
+package com.wanted.onboarding.board.util;
 
-public class PaginationUtils {
+public class PaginationUtil {
     public static int adjustPageNumber(int nowPage, int totalPage) {
         if (nowPage <= 0) {
             return 1;
