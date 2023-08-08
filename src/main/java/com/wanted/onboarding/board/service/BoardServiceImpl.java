@@ -41,7 +41,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public BoardDetailDTO viewBoard(Integer boardId) {
+    public BoardDetailDTO viewBoardDetail(Integer boardId) {
         Board board = boardRepository.findById(boardId).orElse(null);
         if (board != null) {
             return BoardDetailDTO.builder()
@@ -55,21 +55,18 @@ public class BoardServiceImpl implements BoardService {
         } else {
             return null;
         }
-
     }
 
     @Override
-    public Page<Board> boardSearchList(String searchKeyword, Pageable pageable) {
-        return null;
+    public Board viewBoard(Integer boardId) {
+        return boardRepository.findById(boardId).get();
     }
+
 
     @Override
-    public void boardDelete(Integer id) {
+    public void deleteBoard(Integer id) {
 
     }
 
-    @Override
-    public void boardUpdate(Board board) {
 
-    }
 }

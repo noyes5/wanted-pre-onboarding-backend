@@ -12,9 +12,7 @@ import org.springframework.stereotype.Service;
 public interface BoardService {
     void writeBoard(Board board, String email);
     Page<BoardListDTO> getBoardList(int page, int size);
-    BoardDetailDTO viewBoard(Integer boardId);
-    Page<Board> boardSearchList(String searchKeyword, Pageable pageable);
-    void boardDelete(Integer id);
-
-    void boardUpdate(Board board);
+    BoardDetailDTO viewBoardDetail(Integer boardId);
+    Board viewBoard(Integer boardId);
+    void deleteBoard(Integer id);
 }

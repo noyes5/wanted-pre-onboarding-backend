@@ -65,4 +65,13 @@ public class JwtTokenProvider {
         }
         return null;
     }
+
+    public String validateTokenAndExtractEmail(HttpServletRequest request) {
+        String token = extractTokenFromRequest(request);
+
+        if (token != null && validateToken(token)) {
+            return getEmailFromToken(token);
+        }
+        return null;
+    }
 }

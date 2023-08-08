@@ -1,5 +1,6 @@
 package com.wanted.onboarding.board.dto;
 
+import com.wanted.onboarding.users.entity.Users;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

@@ -27,25 +27,25 @@ public class BoardController {
 
     @PostMapping("/write")
     public ResponseEntity<String> writePost(@RequestBody BoardDTO boardDTO, HttpServletRequest request) {
-        String token = jwtTokenProvider.extractTokenFromRequest(request);
-        if (token == null || !jwtTokenProvider.validateToken(token)) {
+        String email = jwtTokenProvider.validateTokenAndExtractEmail(request);
+
+        if (email == null) {
             return new ResponseEntity<>("로그인 상태가 아닙니다. 로그인 해주세요.", HttpStatus.UNAUTHORIZED);
         }
-        String email = jwtTokenProvider.getEmailFromToken(token);
-
         Board board = new Board();
         board.setTitle(boardDTO.getTitle());
         board.setContent(boardDTO.getContent());
         boardService.writeBoard(board, email);
 
         return new ResponseEntity<>("글 작성자: " + email
-                                        + ", 제목: " + boardDTO.getTitle()
-                                        + ", 내용 : " + boardDTO.getContent(), HttpStatus.OK);
+                + ", 제목: " + boardDTO.getTitle()
+                + ", 내용 : " + boardDTO.getContent(), HttpStatus.OK);
     }
+
 
     @GetMapping
     public ResponseEntity<List<BoardListDTO>> getBoardPage(@RequestParam(defaultValue = "1") int page,
-                                                               @RequestParam(defaultValue = "10") int size) {
+                                                           @RequestParam(defaultValue = "10") int size) {
         Page<BoardListDTO> boardPage = boardService.getBoardList(page, size);
         int totalPage = boardPage.getTotalPages();
         page = PaginationUtil.adjustPageNumber(page, totalPage);
@@ -64,11 +64,37 @@ public class BoardController {
 
     @GetMapping("/{boardId}")
     public ResponseEntity<BoardDetailDTO> viewBoard(@PathVariable Integer boardId) {
-        BoardDetailDTO boardDetailDTO = boardService.viewBoard(boardId);
+        BoardDetailDTO boardDetailDTO = boardService.viewBoardDetail(boardId);
         if (boardDetailDTO == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<>(boardDetailDTO, HttpStatus.OK);
+    }
+
+    @PutMapping("/{boardId}")
+    public ResponseEntity<String> updateBoard(@PathVariable Integer boardId
+                                                    , @RequestBody BoardDTO boardDTO, HttpServletRequest request) {
+        String email = jwtTokenProvider.validateTokenAndExtractEmail(request);
+        if (email == null) {
+            return new ResponseEntity<>("로그인 상태가 아닙니다. 로그인 해주세요.", HttpStatus.UNAUTHORIZED);
+        }
+        Board boardTemp = boardService.viewBoard(boardId);
+        String authorEmail = boardTemp.getUser().getEmail();
+
+        if (!authorEmail.equals(email)) {
+            return new ResponseEntity<>("본인의 글만 수정할 수 있습니다.", HttpStatus.FORBIDDEN);
+        }
+        System.out.println("글쓴사람이메일" + authorEmail);
+        boardTemp.setTitle(boardDTO.getTitle());
+        boardTemp.setContent(boardDTO.getContent());
+
+        boardService.writeBoard(boardTemp, email);
+
+        return new ResponseEntity<>("글 작성자: " + email
+                + ", 제목: " + boardTemp.getTitle()
+                + ", 내용 : " + boardTemp.getContent()
+                + ", 글 직성 시간:" + boardTemp.getCreatedAt()
+                + "글수정시간: " + boardTemp.getUpdatedAt(), HttpStatus.OK);
     }
 }
