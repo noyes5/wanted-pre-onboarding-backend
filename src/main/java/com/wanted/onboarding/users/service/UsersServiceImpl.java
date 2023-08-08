@@ -23,7 +23,7 @@ public class UsersServiceImpl implements UsersService {
 
 
     @Override
-    public boolean registerUser(String email, String password) throws RuntimeException {
+    public boolean registerUser(String email, String password) {
         if (!isValidEmail(email)) {
             throw new InvalidEmailException("유효하지 않은 이메일 형식입니다.");
         }

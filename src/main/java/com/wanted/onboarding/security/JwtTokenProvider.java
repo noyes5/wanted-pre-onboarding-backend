@@ -40,7 +40,7 @@ public class JwtTokenProvider {
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
-    // 토큰으로 이메일 검증
+
     public String getEmailFromToken(String token) {
         return Jwts.parser()
                 .setSigningKey(secretKey)
@@ -48,7 +48,7 @@ public class JwtTokenProvider {
                 .getBody()
                 .getSubject();
     }
-    // 유효한 토큰인지 확인 검증
+
     public boolean validateToken(String jwtToken) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);

@@ -10,7 +10,7 @@ public class PaginationUtil {
     public static int calculateStartPage(int nowPage) {
         return Math.max(((nowPage - 1) / 10) * 10 + 1, 1);
     }
-    public static int calculateEndPage(int startPage, int totalPages) {
-        return Math.min(startPage + 9, totalPages);
+    public static int calculateEndPage(int startPage, int totalPage) {
+        return Math.min(startPage + 9, totalPage);
     }
 }
