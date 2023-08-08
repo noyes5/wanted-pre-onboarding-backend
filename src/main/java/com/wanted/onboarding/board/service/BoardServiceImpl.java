@@ -1,6 +1,5 @@
 package com.wanted.onboarding.board.service;
 
-import com.wanted.onboarding.board.dto.BoardDTO;
 import com.wanted.onboarding.board.dto.BoardDetailDTO;
 import com.wanted.onboarding.board.dto.BoardListDTO;
 import com.wanted.onboarding.board.entity.Board;

@@ -5,7 +5,6 @@ import com.wanted.onboarding.board.dto.BoardDetailDTO;
 import com.wanted.onboarding.board.dto.BoardListDTO;
 import com.wanted.onboarding.board.entity.Board;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service

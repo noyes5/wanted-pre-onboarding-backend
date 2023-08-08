@@ -1,7 +1,6 @@
 package com.wanted.onboarding.users.controller;
 
 import com.wanted.onboarding.security.JwtTokenProvider;
-import com.wanted.onboarding.users.entity.Users;
 import com.wanted.onboarding.users.dto.LoginDTO;
 import com.wanted.onboarding.users.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
