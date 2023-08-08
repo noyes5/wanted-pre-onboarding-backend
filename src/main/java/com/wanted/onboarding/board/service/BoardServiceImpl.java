@@ -1,16 +1,17 @@
 package com.wanted.onboarding.board.service;
 
+import com.wanted.onboarding.board.dto.BoardDTO;
+import com.wanted.onboarding.board.dto.BoardListDTO;
 import com.wanted.onboarding.board.entity.Board;
 import com.wanted.onboarding.board.repository.BoardRepository;
 import com.wanted.onboarding.users.entity.Users;
 import com.wanted.onboarding.users.repository.UsersRepository;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class BoardServiceImpl implements BoardService {
@@ -28,8 +29,14 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public Page<Board> boardList(Pageable pageable) {
-        return null;
+    public Page<BoardListDTO> getBoardList(int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("boardId").descending());
+        return boardRepository.findAll(pageable).map(board -> BoardListDTO.builder()
+                .boardId(board.getBoardId())
+                .userEmail(board.getUser().getEmail())
+                .title(board.getTitle())
+                .createdAt(board.getCreatedAt())
+                .build());
     }
 
     @Override
