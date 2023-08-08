@@ -91,10 +91,28 @@ public class BoardController {
 
         boardService.writeBoard(boardTemp, email);
 
-        return new ResponseEntity<>("글 작성자: " + email
+            return new ResponseEntity<>("글 작성자: " + email
                 + ", 제목: " + boardTemp.getTitle()
                 + ", 내용 : " + boardTemp.getContent()
                 + ", 글 직성 시간:" + boardTemp.getCreatedAt()
                 + "글수정시간: " + boardTemp.getUpdatedAt(), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{boardId}")
+    public ResponseEntity<String> deleteBoard(@PathVariable Integer boardId, HttpServletRequest request) {
+        String email = jwtTokenProvider.validateTokenAndExtractEmail(request);
+        if (email == null) {
+            return new ResponseEntity<>("로그인 상태가 아닙니다. 로그인 해주세요.", HttpStatus.UNAUTHORIZED);
+        }
+        Board boardTemp = boardService.viewBoard(boardId);
+        String authorEmail = boardTemp.getUser().getEmail();
+
+        if (!authorEmail.equals(email)) {
+            return new ResponseEntity<>("본인의 글만 삭제할 수 있습니다.", HttpStatus.FORBIDDEN);
+        }
+
+        boardService.deleteBoard(boardId);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

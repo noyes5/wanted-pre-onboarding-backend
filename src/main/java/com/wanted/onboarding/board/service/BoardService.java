@@ -14,5 +14,5 @@ public interface BoardService {
     Page<BoardListDTO> getBoardList(int page, int size);
     BoardDetailDTO viewBoardDetail(Integer boardId);
     Board viewBoard(Integer boardId);
-    void deleteBoard(Integer id);
+    void deleteBoard(Integer boardId);
 }
