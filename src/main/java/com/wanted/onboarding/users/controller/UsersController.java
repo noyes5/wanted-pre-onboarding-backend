@@ -31,7 +31,7 @@ public class UsersController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO) {
         boolean isAuthenticated = usersService.authenticateUser(loginDTO.getEmail(), loginDTO.getPassword());
-        System.out.println(loginDTO.getPassword());
+
         if (isAuthenticated) {
             String token = jwtTokenProvider.createToken(loginDTO.getEmail());
             HttpHeaders headers = new HttpHeaders();
