@@ -6,6 +6,7 @@ import com.wanted.onboarding.board.dto.BoardDetailDTO;
 import com.wanted.onboarding.board.dto.BoardListDTO;
 import com.wanted.onboarding.board.entity.Board;
 import com.wanted.onboarding.board.service.BoardService;
+import com.wanted.onboarding.exception.NotFoundBoardException;
 import com.wanted.onboarding.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -64,12 +65,12 @@ public class BoardController {
 
     @GetMapping("/{boardId}")
     public ResponseEntity<BoardDetailDTO> viewBoard(@PathVariable Integer boardId) {
-        BoardDetailDTO boardDetailDTO = boardService.viewBoardDetail(boardId);
-        if (boardDetailDTO == null) {
+        try {
+            BoardDetailDTO boardDetailDTO = boardService.viewBoardDetail(boardId);
+            return new ResponseEntity<>(boardDetailDTO, HttpStatus.OK);
+        } catch (NotFoundBoardException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
-        return new ResponseEntity<>(boardDetailDTO, HttpStatus.OK);
     }
 
     @PutMapping("/{boardId}")

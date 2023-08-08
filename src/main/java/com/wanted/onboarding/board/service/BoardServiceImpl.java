@@ -4,6 +4,7 @@ import com.wanted.onboarding.board.dto.BoardDetailDTO;
 import com.wanted.onboarding.board.dto.BoardListDTO;
 import com.wanted.onboarding.board.entity.Board;
 import com.wanted.onboarding.board.repository.BoardRepository;
+import com.wanted.onboarding.exception.NotFoundBoardException;
 import com.wanted.onboarding.users.entity.Users;
 import com.wanted.onboarding.users.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,19 +42,17 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public BoardDetailDTO viewBoardDetail(Integer boardId) {
-        Board board = boardRepository.findById(boardId).orElse(null);
-        if (board != null) {
-            return BoardDetailDTO.builder()
-                    .boardId(board.getBoardId())
-                    .title(board.getTitle())
-                    .content(board.getContent())
-                    .userEmail(board.getUser().getEmail())
-                    .createdAt(board.getCreatedAt())
-                    .updatedAt(board.getUpdatedAt())
-                    .build();
-        } else {
-            return null;
-        }
+        return boardRepository.findById(boardId)
+                .map(board -> BoardDetailDTO.builder()
+                        .boardId(board.getBoardId())
+                        .title(board.getTitle())
+                        .content(board.getContent())
+                        .userEmail(board.getUser().getEmail())
+                        .createdAt(board.getCreatedAt())
+                        .updatedAt(board.getUpdatedAt())
+                        .build())
+                .orElseThrow(() -> new NotFoundBoardException("해당 게시물을 찾을 수 없습니다."));
+
     }
 
     @Override
