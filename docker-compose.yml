@@ -17,9 +17,6 @@ services:
     networks:
       - myapp_network
 
-  volumes:
-    mysql_data_volume:
-
   application:
     container_name: onboarding
     build:
@@ -40,3 +37,6 @@ services:
 networks:
   myapp_network:
 
+
+volumes:
+  mysql_data_volume:
