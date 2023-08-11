@@ -1,0 +1,21 @@
+server:
+  port: 8090
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/community?serverTimezone=UTC
+    username: root
+    password: 123456
+
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+
+security:
+  jwt:
+    secret-key: NiOeyFbN1Gqo10bPgUyTFsRMkJpGLXSvGP04eFqj5B30r5TcrtlSXfQ7TndvYjNvfkEKLqILn0j1SmKODO1Yw3JpBBgI3nVPEahqxeY8qbPSFGyzyEVxnl4AQcrnVneI
+    tokenValid-time: 10800000
+    issuer: noyes5
