@@ -13,9 +13,12 @@ services:
     volumes:
       - mysql_data_volume:/var/lib/mysql
       - ./sql:/docker-entrypoint-initdb.d
-    command: ['--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+    command: [ '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci' ]
     networks:
       - myapp_network
+
+  volumes:
+    mysql_data_volume:
 
   application:
     container_name: onboarding
@@ -33,5 +36,7 @@ services:
     networks:
       - myapp_network
 
+
 networks:
   myapp_network:
+
